@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Available Exams</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: linear-gradient(120deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .box {
+            background: white;
+            padding: 30px;
+            width: 400px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .exam-btn {
+            display: block;
+            padding: 15px;
+            margin: 15px 0;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+        }
+        .exam-btn:hover {
+            background: #5a6fdc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>Select Exam</h2>
+
+    {% for exam in exams %}
+        <a class="exam-btn" href="/exam/{{ exam.id }}/">
+            {{ exam.title }}
+        </a>
+    {% empty %}
+        <p>No exams available</p>
+    {% endfor %}
+
+</div>
+
+</body>
+</html>

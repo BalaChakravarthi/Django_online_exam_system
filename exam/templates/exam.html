@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ exam.title }}</title>
+    <link rel="stylesheet" href="{% static 'exam/style.css' %}">
+    <style>
+.timer-box {
+    background: #ff4757;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 18px;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+    <h2>{{ exam.title }}</h2>
+    <div class="timer-box">
+    Time Left: <span id="timer"></span>
+</div>
+
+
+    <form method="POST">
+        {% csrf_token %}
+
+        {% for q in questions %}
+        <div class="question-card">
+            <div class="question-title">
+                {{ forloop.counter }}. {{ q.question }}
+            </div>
+
+            <label class="option">
+                <input type="radio" name="{{ q.id }}" value="{{ q.option1 }}"> {{ q.option1 }}
+            </label>
+
+            <label class="option">
+                <input type="radio" name="{{ q.id }}" value="{{ q.option2 }}"> {{ q.option2 }}
+            </label>
+
+            <label class="option">
+                <input type="radio" name="{{ q.id }}" value="{{ q.option3 }}"> {{ q.option3 }}
+            </label>
+
+            <label class="option">
+                <input type="radio" name="{{ q.id }}" value="{{ q.option4 }}"> {{ q.option4 }}
+            </label>
+        </div>
+        {% endfor %}
+
+        <button class="submit-btn">🚀 Submit Exam</button>
+    </form>
+</div>
+<script>
+    // Make sure duration is always a number
+    let totalTime = parseInt("{{ exam.duration|default:0 }}") * 60;
+
+    function startTimer() {
+        const timerElement = document.getElementById("timer");
+        const form = document.querySelector("form");
+
+        if (totalTime <= 0) {
+            timerElement.innerHTML = "0m 00s";
+            return;
+        }
+
+        const countdown = setInterval(function () {
+
+            let minutes = Math.floor(totalTime / 60);
+            let seconds = totalTime % 60;
+
+            timerElement.innerHTML =
+                minutes + "m " + (seconds < 10 ? "0" : "") + seconds + "s";
+
+            if (totalTime <= 0) {
+                clearInterval(countdown);
+                // alert("⏰ Time is up! Exam will be submitted automatically.");
+                form.submit();
+                return;
+            }
+
+            totalTime--;
+
+        }, 1000);
+    }
+
+    window.addEventListener("load", startTimer);
+</script>
+
+</body>
+</html>

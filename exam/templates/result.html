@@ -1,0 +1,130 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Result</title>
+    <link rel="stylesheet" href="{% static 'exam/style.css' %}">
+    <style>
+        /* Navigation Button Container */
+        .exam-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        /* Common Button Style */
+        .exam-btn-nav {
+            padding: 12px 28px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+        }
+
+        /* Previous Button */
+        .prev-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
+        }
+
+        /* Next Button */
+        .next-btn {
+            background: linear-gradient(135deg, #00b894, #55efc4);
+            box-shadow: 0 4px 15px rgba(0, 184, 148, 0.4);
+        }
+
+        /* Hover Effects */
+        .exam-btn-nav:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Disabled State */
+        .exam-btn-nav:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Top bar */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Logout Button */
+        .logout-btn {
+            background: linear-gradient(135deg, #ff4757, #ff6b81);
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: linear-gradient(135deg, #e84118, #ff4757);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="result-box">
+            <h2>{{ exam.title }} - Result</h2>
+
+            <div class="score {% if percentage >= 50 %}pass{% else %}fail{% endif %}">
+                {{ score }}
+            </div>
+
+            <div class="percentage">
+                {{ percentage }}%
+            </div>
+
+            {% if percentage >= 50 %}
+            <h3 class="pass">🎉 Congratulations! You Passed</h3>
+            {% else %}
+            <h3 class="fail">❌ Better Luck Next Time</h3>
+            {% endif %}
+        </div>
+        <div class="exam-navigation">
+
+            {% if previous_exam %}
+            <a href="/exam/{{ previous_exam.id }}/" class="exam-btn-nav prev-btn">
+                ⬅ Previous Exam
+            </a>
+            {% endif %}
+
+            {% if next_exam %}
+            <a href="/exam/{{ next_exam.id }}/" class="exam-btn-nav next-btn">
+                Next Exam ➡
+            </a>
+            {% endif %}
+
+        </div>
+
+        {% if not previous_exam and not next_exam %}
+        <p style="text-align:center; margin-top:20px;">
+            No more exams available.
+        </p>
+        {% endif %}
+        <div class="top-bar">
+            <span>Welcome, {{ request.user.username }}</span>
+            <a href="/logout/" class="logout-btn">Logout</a>
+        </div>
+
+    </div>
+</body>
+
+</html>
